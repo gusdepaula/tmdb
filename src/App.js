@@ -5,28 +5,33 @@ const FEATURED_API =
   "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=3a66a6524b8bd8e2a826a73f5535335d&page=1";
 
 const SEARCH_API =
-  "https://api.themoviedb.org/3/discover/movie?&api_key=3a66a6524b8bd8e2a826a73f5535335d&query=";
+  "https://api.themoviedb.org/3/search/movie?api_key=3a66a6524b8bd8e2a826a73f5535335d&query=";
 
 function App() {
   const [movies, setMovies] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    fetch(FEATURED_API)
+    getMovies(FEATURED_API);
+  }, []);
+
+  const getMovies = (API) => {
+    fetch(API)
       .then((res) => res.json())
       .then((data) => {
         // console.log(data.results);
         setMovies(data.results);
       });
-  }, []);
+  };
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
-    fetch(SEARCH_API + searchTerm)
-      .then((res) => res.json())
-      .then((data) => {
-        setMovies(data.results);
-      });
+
+    if (searchTerm) {
+      getMovies(SEARCH_API + searchTerm);
+
+      setSearchTerm("");
+    }
   };
 
   const handleOnChange = (e) => {
