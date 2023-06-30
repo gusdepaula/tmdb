@@ -39,13 +39,18 @@ function App() {
     <>
       <header>
         <form onSubmit={handleOnSubmit}>
-          <input
-            type="search"
-            className="search"
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={handleOnChange}
-          />
+          <div className="search-container">
+            <input
+              type="search"
+              className="search"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={handleOnChange}
+            />
+            <button className="search-button" onClick={handleOnSubmit}>
+              🔎
+            </button>
+          </div>
         </form>
       </header>
       <div className="movie-container">
