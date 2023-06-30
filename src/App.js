@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Movie from "./components/Movie";
 
-const FEATURED_API =
-  "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=3a66a6524b8bd8e2a826a73f5535335d&page=1";
+const apiKey = process.env.REACT_APP_API_KEY;
 
-const SEARCH_API =
-  "https://api.themoviedb.org/3/search/movie?api_key=3a66a6524b8bd8e2a826a73f5535335d&query=";
+const FEATURED_API = `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=${apiKey}&page=1`;
+
+const SEARCH_API = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=`;
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -15,14 +15,11 @@ function App() {
     getMovies(FEATURED_API);
   }, []);
 
-  const getMovies = (API) => {
-    fetch(API)
-      .then((res) => res.json())
-      .then((data) => {
-        // console.log(data.results);
-        setMovies(data.results);
-      });
-  };
+  async function getMovies(API) {
+    const res = await fetch(API);
+    const data = await res.json();
+    setMovies(data.results);
+  }
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
