@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Movie from "./components/Movie";
 
-const apiKey = process.env.REACT_APP_API_KEY;
+const apiKey = import.meta.env.VITE_API_KEY;
 
 const FEATURED_API = `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=${apiKey}&page=1`;
 
