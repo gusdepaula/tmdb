@@ -1,55 +1,15 @@
 import React, { useEffect, useState } from "react";
+
+import Header from "./components/Header";
+import { SearchContainer, Search, SearchButton } from "./components/Search";
+import MovieContainer from "./components/MovieContainer";
 import Movie from "./components/Movie";
-import styled from "styled-components";
 
 const apiKey = import.meta.env.VITE_API_KEY;
 
 const FEATURED_API = `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=${apiKey}&page=1`;
 
 const SEARCH_API = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=`;
-
-const Header = styled.header`
-  background-color: #373b69;
-  display: flex;
-  padding: 1rem;
-  justify-content: flex-end;
-`;
-
-const SearchContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const Search = styled.input`
-  background-color: transparent;
-  border: 2px solid #22254b;
-  border-radius: 50px;
-  color: #fff;
-  font-family: inherit;
-  font-size: 1.2rem;
-  padding: 0.5rem 1.5rem;
-
-  &:focus {
-    outline: 0;
-  }
-`;
-
-const SearchButton = styled.button`
-  background-color: transparent;
-  border: none;
-  padding: 5px;
-  margin-left: 5px;
-  cursor: pointer;
-  position: absolute;
-  right: 33px;
-  font-size: 1.5rem;
-`;
-
-const MovieContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-`;
 
 function App() {
   const [movies, setMovies] = useState([]);
