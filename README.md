@@ -1,6 +1,5 @@
-## Movies App w/ React
+## TMDB App com Vite React
 
-- Project(CRA) cleanup
 - API calls
 - Search
 - Movie info
