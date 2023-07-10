@@ -60,9 +60,16 @@ function App() {
   }, []);
 
   async function getMovies(API) {
-    const res = await fetch(API);
-    const data = await res.json();
-    setMovies(data.results);
+    try {
+      const res = await fetch(API);
+      if (!res.ok) throw new Error("Something went wrong with fetching movies");
+
+      const data = await res.json();
+
+      setMovies(data.results);
+    } catch (err) {
+      console.error(err.message);
+    }
   }
 
   const handleOnSubmit = (e) => {
