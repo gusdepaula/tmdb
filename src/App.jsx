@@ -16,19 +16,27 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    getMovies(FEATURED_API);
+    const controller = new AbortController();
+
+    getMovies(FEATURED_API, { signal: controller.signal });
+
+    return function () {
+      controller.abort();
+    };
   }, []);
 
-  async function getMovies(API) {
+  async function getMovies(API, SIGNAL) {
     try {
-      const res = await fetch(API);
+      const res = await fetch(API, SIGNAL);
       if (!res.ok) throw new Error("Something went wrong with fetching movies");
 
       const data = await res.json();
 
       setMovies(data.results);
     } catch (err) {
-      console.error(err.message);
+      if (err.name !== "AbortError") {
+        console.error(err.message);
+      }
     }
   }
 
@@ -36,9 +44,12 @@ function App() {
     e.preventDefault();
 
     if (searchTerm) {
-      getMovies(SEARCH_API + searchTerm);
-
+      const controller = new AbortController();
+      getMovies(SEARCH_API + searchTerm, { signal: controller.signal });
       setSearchTerm("");
+      return function () {
+        controller.abort();
+      };
     }
   };
 
