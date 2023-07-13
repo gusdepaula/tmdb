@@ -4,49 +4,41 @@ import Header from "./components/Header";
 import { SearchContainer, Search, SearchButton } from "./components/Search";
 import MovieContainer from "./components/MovieContainer";
 import Movie from "./components/Movie";
+import { useMovies } from "./useMovies";
 
 const apiKey = import.meta.env.VITE_API_KEY;
 
-const FEATURED_API = `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=${apiKey}&page=1`;
-
-const SEARCH_API = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=`;
-
 function App() {
-  const [movies, setMovies] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    getMovies(FEATURED_API, { signal: controller.signal });
-
-    return function () {
-      controller.abort();
-    };
-  }, []);
-
-  async function getMovies(API, SIGNAL) {
-    try {
-      const res = await fetch(API, SIGNAL);
-      if (!res.ok) throw new Error("Something went wrong with fetching movies");
-
-      const data = await res.json();
-
-      setMovies(data.results);
-    } catch (err) {
-      if (err.name !== "AbortError") {
-        console.error(err.message);
-      }
-    }
-  }
+  const [moviesSearch, setMoviesSearch] = useState([]);
+  const { movies } = useMovies();
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
 
     if (searchTerm) {
       const controller = new AbortController();
-      getMovies(SEARCH_API + searchTerm, { signal: controller.signal });
-      setSearchTerm("");
+
+      async function fetchSearch() {
+        try {
+          const res = await fetch(
+            `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchTerm}`,
+            { signal: controller.signal }
+          );
+          if (!res.ok)
+            throw new Error("Something went wrong with fetching movies");
+
+          const data = await res.json();
+          if (data.Response === "False") throw new Error("Movie not found");
+
+          setMoviesSearch(data.results);
+        } catch (err) {
+          console.log(err.message);
+        }
+      }
+
+      fetchSearch();
+
       return function () {
         controller.abort();
       };
@@ -72,10 +64,18 @@ function App() {
           </SearchContainer>
         </form>
       </Header>
-      <MovieContainer>
-        {movies.length > 0 &&
-          movies.map((movie) => <Movie key={movie.id} {...movie} />)}
-      </MovieContainer>
+      {moviesSearch.length <= 0 ? (
+        <MovieContainer>
+          {movies.length > 0 &&
+            movies.map((movie) => <Movie key={movie.id} {...movie} />)}
+        </MovieContainer>
+      ) : (
+        <MovieContainer>
+          {moviesSearch.map((movie) => (
+            <Movie key={movie.id} {...movie} />
+          ))}
+        </MovieContainer>
+      )}
     </>
   );
 }
