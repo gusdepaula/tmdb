@@ -1,4 +1,5 @@
 import React from "react";
+import { Link, NavLink } from "react-router-dom";
 import styled, { css } from "styled-components";
 
 const IMAGES_API = "https://image.tmdb.org/t/p/w1280/";
@@ -80,17 +81,18 @@ const setVoteClass = (vote) => {
     return "red";
   }
 };
-
-const Movie = ({ title, poster_path, overview, vote_average }) => (
+const Movie = ({ title, poster_path, overview, vote_average, id }) => (
   <MovieBox>
-    <img
-      src={
-        poster_path
-          ? IMAGES_API + poster_path
-          : "https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1759&q=80"
-      }
-      alt={title}
-    />
+    <Link to={`/movie/${id}`}>
+      <img
+        src={
+          poster_path
+            ? IMAGES_API + poster_path
+            : "https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1759&q=80"
+        }
+        alt={title}
+      />
+    </Link>
     <MovieInfo>
       <h3>{title}</h3>
       <Tag className={setVoteClass(vote_average)}>{vote_average}</Tag>

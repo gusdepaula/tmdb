@@ -4,7 +4,7 @@ import Header from "./components/Header";
 import { SearchContainer, Search, SearchButton } from "./components/Search";
 import MovieContainer from "./components/MovieContainer";
 import Movie from "./components/Movie";
-import { useMovies } from "./useMovies";
+import { useMovies } from "./hooks/useMovies";
 
 const apiKey = import.meta.env.VITE_API_KEY;
 
