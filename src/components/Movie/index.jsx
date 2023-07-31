@@ -97,10 +97,10 @@ const Movie = ({ title, poster_path, overview, vote_average, id }) => (
       <h3>{title}</h3>
       <Tag className={setVoteClass(vote_average)}>{vote_average}</Tag>
     </MovieInfo>
-    <div className="movie-over">
+    {/* <div className="movie-over">
       <h2>Overview:</h2>
       <p>{overview}</p>
-    </div>
+    </div> */}
   </MovieBox>
 );
 

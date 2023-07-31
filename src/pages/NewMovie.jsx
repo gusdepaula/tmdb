@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import styled from "styled-components"; // Importe o styled-components
-
-const apiKey = import.meta.env.VITE_API_KEY;
-const IMAGES_API = "https://image.tmdb.org/t/p/w1280/";
+import { useParams, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { AiFillStar, AiOutlineArrowLeft } from "react-icons/ai";
 
 const MovieContainer = styled.div`
   max-width: 600px;
@@ -39,6 +37,41 @@ const ReleaseDate = styled.p`
   color: #999;
 `;
 
+const RatingContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  color: #666;
+`;
+
+const StarIcon = styled(AiFillStar)`
+  color: #ffbb00;
+  font-size: 20px;
+  margin-right: 5px;
+`;
+
+const BackButton = styled.button`
+  display: flex;
+  align-items: center;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #444;
+  }
+
+  & > svg {
+    font-size: 20px;
+    margin-right: 5px;
+  }
+`;
+
 function NewMovie() {
   const apiKey = import.meta.env.VITE_API_KEY;
   const IMAGES_API = "https://image.tmdb.org/t/p/w1280/";
@@ -47,38 +80,59 @@ function NewMovie() {
 
   const [movie, setMovie] = useState({});
 
-  useEffect(
-    function () {
-      const controller = new AbortController();
+  const navigate = useNavigate();
 
-      async function fetchMovie() {
-        try {
-          const res = await fetch(
-            //343611?api_key=API_KEY
-            `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}`,
-            { signal: controller.signal }
-          );
-          if (!res.ok)
-            throw new Error("Something went wrong with fetching movie");
+  const handleGoBack = () => {
+    navigate(-1);
+  };
 
-          const data = await res.json();
-          console.log(data);
-          setMovie(data); // Ajuste para setar o objeto completo, não apenas data.results
-        } catch (err) {
-          if (err.message !== "The user aborted a request.") {
-            console.log(err.message);
-          }
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function fetchMovie() {
+      try {
+        const res = await fetch(
+          //343611?api_key=API_KEY
+          `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}`,
+          { signal: controller.signal }
+        );
+        if (!res.ok)
+          throw new Error("Something went wrong with fetching movie");
+
+        const data = await res.json();
+        console.log(data);
+        setMovie(data); // Ajuste para setar o objeto completo, não apenas data.results
+      } catch (err) {
+        if (err.message !== "The user aborted a request.") {
+          console.log(err.message);
         }
       }
+    }
 
-      fetchMovie();
+    fetchMovie();
 
-      return function () {
-        controller.abort();
-      };
-    },
-    [id, apiKey]
-  );
+    return () => {
+      controller.abort();
+    };
+  }, [id, apiKey]);
+
+  const renderStars = (rating) => {
+    const maxRating = 5;
+    const scaledRating = Math.round((rating / 10) * maxRating);
+
+    // Criamos um array com o tamanho do valor arredondado para representar as estrelas
+    const starsArray = Array.from({ length: scaledRating }, (_, index) => (
+      <StarIcon key={index} />
+    ));
+
+    return (
+      <RatingContainer>
+        {starsArray}
+        <span>{movie.vote_average}</span>
+      </RatingContainer>
+    );
+  };
+
   return (
     <MovieContainer>
       <MovieTitle>{movie.title}</MovieTitle>
@@ -91,7 +145,12 @@ function NewMovie() {
         alt={movie.title}
       />
       <MovieOverview>{movie.overview}</MovieOverview>
-      <ReleaseDate>Data de Lançamento: {movie.release_date}</ReleaseDate>
+      <ReleaseDate>Release date: {movie.release_date}</ReleaseDate>
+      {renderStars(movie.vote_average)}
+      <BackButton onClick={handleGoBack}>
+        <AiOutlineArrowLeft />
+        Back
+      </BackButton>
     </MovieContainer>
   );
 }
