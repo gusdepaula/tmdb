@@ -10,6 +10,7 @@ const MovieContainer = styled.div`
   background-color: #f7f7f7;
   border-radius: 10px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
 `;
 
 const MovieTitle = styled.h2`
@@ -53,7 +54,7 @@ const StarIcon = styled(AiFillStar)`
 const BackButton = styled.button`
   position: absolute;
   top: 10px;
-  right: 45px;
+  right: 25px;
   display: flex;
   align-items: center;
   background-color: #333;
