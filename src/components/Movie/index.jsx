@@ -1,6 +1,6 @@
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
-import styled, { css } from "styled-components";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
 
 const IMAGES_API = "https://image.tmdb.org/t/p/w1280/";
 
@@ -10,8 +10,7 @@ const MovieBox = styled.div`
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   margin: 1rem;
-  margin: 1rem;
-  width: 300px;
+  width: 350px;
   position: relative;
 
   & img {

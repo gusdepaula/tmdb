@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { AiFillStar, AiOutlineArrowLeft } from "react-icons/ai";
+import { AiFillStar } from "react-icons/ai";
 
 const MovieContainer = styled.div`
   max-width: 600px;
@@ -51,6 +51,9 @@ const StarIcon = styled(AiFillStar)`
 `;
 
 const BackButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 45px;
   display: flex;
   align-items: center;
   background-color: #333;
@@ -61,14 +64,10 @@ const BackButton = styled.button`
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  z-index: 1;
 
   &:hover {
     background-color: #444;
-  }
-
-  & > svg {
-    font-size: 20px;
-    margin-right: 5px;
   }
 `;
 
@@ -120,6 +119,10 @@ function NewMovie() {
     const maxRating = 5;
     const scaledRating = Math.round((rating / 10) * maxRating);
 
+    const ratingWithOneDecimal = movie.vote_average
+      ? parseFloat(movie.vote_average.toFixed(1))
+      : 0;
+
     // Criamos um array com o tamanho do valor arredondado para representar as estrelas
     const starsArray = Array.from({ length: scaledRating }, (_, index) => (
       <StarIcon key={index} />
@@ -128,13 +131,14 @@ function NewMovie() {
     return (
       <RatingContainer>
         {starsArray}
-        <span>{movie.vote_average}</span>
+        <span>{ratingWithOneDecimal}</span>
       </RatingContainer>
     );
   };
 
   return (
     <MovieContainer>
+      <BackButton onClick={handleGoBack}>&times;</BackButton>
       <MovieTitle>{movie.title}</MovieTitle>
       <MovieImage
         src={
@@ -147,10 +151,6 @@ function NewMovie() {
       <MovieOverview>{movie.overview}</MovieOverview>
       <ReleaseDate>Release date: {movie.release_date}</ReleaseDate>
       {renderStars(movie.vote_average)}
-      <BackButton onClick={handleGoBack}>
-        <AiOutlineArrowLeft />
-        Back
-      </BackButton>
     </MovieContainer>
   );
 }
