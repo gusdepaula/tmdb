@@ -1,9 +1,7 @@
-import { Suspense } from "react";
 import HeaderWithSearch from "./components/Header";
-import SpinnerFullPage from "./components/SpinnerFullPage";
 import { useMovies } from "./hooks/useMovies";
 import { useSearch } from "./hooks/useSearch";
-import LazyMovieContainer from "./components/LazyMovieContainer";
+import MovieContainer from "./components/MovieContainer";
 import Movie from "./components/Movie";
 
 function App() {
@@ -12,25 +10,25 @@ function App() {
     useSearch();
 
   return (
-    <Suspense fallback={<SpinnerFullPage />}>
+    <>
       <HeaderWithSearch
         searchTerm={searchTerm}
         handleOnSubmit={handleOnSubmit}
         handleOnChange={handleOnChange}
       />
       {moviesSearch.length <= 0 ? (
-        <LazyMovieContainer>
+        <MovieContainer>
           {movies.length > 0 &&
             movies.map((movie) => <Movie key={movie.id} {...movie} />)}
-        </LazyMovieContainer>
+        </MovieContainer>
       ) : (
-        <LazyMovieContainer>
+        <MovieContainer>
           {moviesSearch.map((movie) => (
             <Movie key={movie.id} {...movie} />
           ))}
-        </LazyMovieContainer>
+        </MovieContainer>
       )}
-    </Suspense>
+    </>
   );
 }
 
