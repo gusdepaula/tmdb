@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { AiFillStar } from "react-icons/ai";
+import { AiFillStar, AiOutlineCloseCircle } from "react-icons/ai";
+import { useMovie } from "../hooks/useMovie";
 
 const MovieContainer = styled.div`
   max-width: 600px;
@@ -63,72 +63,42 @@ const StarIcon = styled(AiFillStar)`
   margin-right: 5px;
 `;
 
-const BackButton = styled.button`
+const CloseButton = styled.button`
   position: absolute;
   top: 10px;
-  right: 25px;
+  right: 10px;
   display: flex;
+  background-color: transparent;
   align-items: center;
-  background-color: #333;
-  color: #fff;
+  color: #333;
   border: none;
-  border-radius: 5px;
-  padding: 10px 15px;
   font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: color 0.2s ease;
   z-index: 1;
 
   &:hover {
-    background-color: #444;
+    color: #444;
+  }
+
+  & > svg {
+    font-size: 24px;
   }
 `;
 
 function NewMovie() {
-  const apiKey = import.meta.env.VITE_API_KEY;
   const IMAGES_API = "https://image.tmdb.org/t/p/w1280/";
 
-  const { id } = useParams(); // Obtém o ID do filme da URL
-
-  const [movie, setMovie] = useState({});
+  const { id } = useParams();
+  const { movie } = useMovie(id);
 
   const navigate = useNavigate();
 
-  const handleGoBack = () => {
+  function handleGoBack() {
     navigate(-1);
-  };
+  }
 
-  useEffect(() => {
-    const controller = new AbortController();
-
-    async function fetchMovie() {
-      try {
-        const res = await fetch(
-          //343611?api_key=API_KEY
-          `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}`,
-          { signal: controller.signal }
-        );
-        if (!res.ok)
-          throw new Error("Something went wrong with fetching movie");
-
-        const data = await res.json();
-        console.log(data);
-        setMovie(data); // Ajuste para setar o objeto completo, não apenas data.results
-      } catch (err) {
-        if (err.message !== "The user aborted a request.") {
-          console.log(err.message);
-        }
-      }
-    }
-
-    fetchMovie();
-
-    return () => {
-      controller.abort();
-    };
-  }, [id, apiKey]);
-
-  const renderStars = (rating) => {
+  function renderStars(rating) {
     const maxRating = 5;
     const scaledRating = Math.round((rating / 10) * maxRating);
 
@@ -147,7 +117,7 @@ function NewMovie() {
         <span>{ratingWithOneDecimal}</span>
       </RatingContainer>
     );
-  };
+  }
 
   function formatDate(dateString) {
     const date = new Date(dateString);
@@ -162,7 +132,9 @@ function NewMovie() {
 
   return (
     <MovieContainer>
-      <BackButton onClick={handleGoBack}>&times;</BackButton>
+      <CloseButton onClick={handleGoBack}>
+        <AiOutlineCloseCircle />
+      </CloseButton>
       <MovieTitle>{movie.title}</MovieTitle>
       <MovieImage
         src={

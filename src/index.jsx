@@ -1,21 +1,19 @@
-import React, { Suspense } from "react";
-import ReactDOM from "react-dom/client";
+import React from "react";
+import ReactDOM from "react-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./index.css";
 import App from "./App";
 import NewMovie from "./pages/NewMovie";
-import SpinnerFullPage from "./components/Spinner/SpinnerFullPage";
+import "./index.css";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
+const root = document.getElementById("root");
+ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <Suspense fallback={<SpinnerFullPage />}>
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="movie/:id" element={<NewMovie />} />
-        </Routes>
-      </Suspense>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="movie/:id" element={<NewMovie />} />
+      </Routes>
     </BrowserRouter>
-  </React.StrictMode>
+  </React.StrictMode>,
+  root
 );

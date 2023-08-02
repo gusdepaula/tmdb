@@ -1,25 +1,25 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 const apiKey = import.meta.env.VITE_API_KEY;
 
-export function useMovie() {
-  const [movie, setMovie] = useState([]);
+export function useMovie(id) {
+  const [movie, setMovie] = useState({});
 
-  useEffect(function () {
+  useEffect(() => {
     const controller = new AbortController();
 
     async function fetchMovie() {
       try {
         const res = await fetch(
-          //343611?api_key=API_KEY
-          `https://api.themoviedb.org/3/movie/${id}?${apiKey}`,
+          `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}`,
           { signal: controller.signal }
         );
+
         if (!res.ok)
           throw new Error("Something went wrong with fetching movie");
 
         const data = await res.json();
-        setMovie(data.results);
+        setMovie(data);
       } catch (err) {
         if (err.message !== "The user aborted a request.") {
           console.log(err.message);
@@ -29,10 +29,10 @@ export function useMovie() {
 
     fetchMovie();
 
-    return function () {
+    return () => {
       controller.abort();
     };
-  }, []);
+  }, [id]);
 
   return { movie };
 }
