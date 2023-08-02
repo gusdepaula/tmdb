@@ -33,9 +33,21 @@ const MovieOverview = styled.p`
 `;
 
 const ReleaseDate = styled.p`
-  font-weight: bold;
-  margin-top: 10px;
-  color: #999;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #666;
+`;
+
+const Genres = styled.p`
+  font-size: 16px;
+  line-height: 1.5;
+  color: #666;
+`;
+
+const Duration = styled.p`
+  font-size: 16px;
+  line-height: 1.5;
+  color: #666;
 `;
 
 const RatingContainer = styled.div`
@@ -137,6 +149,17 @@ function NewMovie() {
     );
   };
 
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("pt-BR");
+  }
+
+  function formatDuration(durationInMinutes) {
+    const hours = Math.floor(durationInMinutes / 60);
+    const minutes = durationInMinutes % 60;
+    return `${hours}h ${minutes}min`;
+  }
+
   return (
     <MovieContainer>
       <BackButton onClick={handleGoBack}>&times;</BackButton>
@@ -150,7 +173,18 @@ function NewMovie() {
         alt={movie.title}
       />
       <MovieOverview>{movie.overview}</MovieOverview>
-      <ReleaseDate>Release date: {movie.release_date}</ReleaseDate>
+      {movie.status === "Released" ? (
+        <ReleaseDate>
+          Release date: {formatDate(movie.release_date)}
+        </ReleaseDate>
+      ) : (
+        ""
+      )}
+      <Genres>
+        Genres:{" "}
+        {movie.genres ? movie.genres.map((genre) => genre.name).join(", ") : ""}
+      </Genres>
+      <Duration>Duration: {formatDuration(movie.runtime)}</Duration>
       {renderStars(movie.vote_average)}
     </MovieContainer>
   );
