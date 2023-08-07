@@ -84,7 +84,7 @@ function HeaderWithSearch({ searchTerm, handleOnSubmit, handleOnChange }) {
     <Header>
       <Title>
         <Logo>🎞</Logo>
-        TMdB
+        TMDb
       </Title>
       <form onSubmit={handleOnSubmit}>
         <SearchContainer>
