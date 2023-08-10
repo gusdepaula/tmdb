@@ -1,27 +1,26 @@
 import styled from "styled-components";
-import { AiOutlineSearch } from "react-icons/ai";
 
 const Header = styled.header`
   background-color: #373b69;
   display: flex;
   align-items: center;
-  padding: 1rem;
-  justify-content: space-between; /* Novo: alinhar o h1 à esquerda e o input search à direita */
+  justify-content: space-between;
 
   @media (max-width: 768px) {
-    flex-direction: column; /* Novo: em telas menores, colocar os elementos em coluna */
-    align-items: flex-start; /* Novo: alinhar os elementos à esquerda */
+    flex-direction: column;
+    align-items: center;
   }
 `;
 
 const Title = styled.h1`
   font-size: 2rem;
-  font-family: "Roboto", sans-serif; /* Nova fonte */
-  color: #fff; /* Cor do texto */
+  font-family: "Roboto", sans-serif;
+  color: #fff;
   margin: 0;
-  padding-right: 1rem;
+  padding: 0.5rem;
   display: flex;
-  align-items: center;
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
 
   @media (max-width: 768px) {
     margin-bottom: 1rem;
@@ -29,14 +28,25 @@ const Title = styled.h1`
 `;
 
 const Logo = styled.span`
-  font-size: 2.5rem; /* Tamanho do logo */
-  margin-right: 0.5rem; /* Espaçamento entre o logo e o texto */
+  font-size: 2.5rem;
+  margin-right: 0.5rem;
+
+  @media (max-width: 768px) {
+    margin: 0; /* Remove the right margin */
+    margin-bottom: 0.5rem; /* Add margin to the bottom for spacing */
+    text-align: center; /* Center the logo horizontally */
+  }
 `;
 
 const SearchContainer = styled.div`
   display: flex;
-  align-items: center;
-  position: relative;
+  flex-direction: column;
+  align-items: center; /* Centralizar verticalmente */
+
+  @media (max-width: 768px) {
+    margin: 0.5rem 0 1rem 0; /* Adicionar margem no topo em visualização mobile */
+    width: 100%; /* Para garantir que o input ocupe toda a largura disponível */
+  }
 `;
 
 const Search = styled.input`
@@ -47,6 +57,7 @@ const Search = styled.input`
   font-family: inherit;
   font-size: 1.2rem;
   padding: 0.5rem 1.5rem;
+  max-width: 100%; /* Prevent horizontal scrolling */
 
   &:focus {
     outline: 0;
@@ -61,21 +72,6 @@ const Search = styled.input`
   &::-webkit-search-results-button,
   &::-webkit-search-results-decoration {
     display: none;
-  }
-`;
-
-const SearchButton = styled.button`
-  background-color: transparent;
-  border: none;
-  padding: 5px;
-  margin-left: 5px;
-  cursor: pointer;
-  font-size: 1.5rem;
-  color: #fff; /* Novo: cor do ícone de pesquisa */
-  transition: color 0.3s;
-
-  &:hover {
-    color: #f1f1f1; /* Novo: cor do ícone de pesquisa no hover */
   }
 `;
 
@@ -94,9 +90,6 @@ function HeaderWithSearch({ searchTerm, handleOnSubmit, handleOnChange }) {
             value={searchTerm}
             onChange={handleOnChange}
           />
-          <SearchButton onClick={handleOnSubmit}>
-            <AiOutlineSearch />
-          </SearchButton>
         </SearchContainer>
       </form>
     </Header>
